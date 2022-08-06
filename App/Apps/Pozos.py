@@ -4,7 +4,7 @@ import plotly.express as px
 
 
 def app():
-    union = pd.read_csv("../files/UnionRegiosDOFShape.csv")
+    union = pd.read_csv("files/UnionRegiosDOFShape.csv")
 
     union = union.sort_values(by='VOLUMEN DE EXTRACCIÓN ANUAL DE APROVECHAMIENTOS SUBTERRÁNEOS EN m3')
 
