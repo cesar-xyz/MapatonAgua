@@ -74,3 +74,11 @@ def app():
     fig.update_layout(mapbox_style=mapColor[color])
     fig.update_layout(margin={"r": 0, "t": 40, "l": 0, "b": 10})
     st.plotly_chart(fig, use_container_width=True)
+
+    hide_footer_style = """
+    <style>
+    .reportview-container .main footer {visibility: hidden;}  
+    Rastreo del agua de Nuevo León por Colaboradores de Rastreo del agua de Nuevo León se distribuye bajo una Licencia Creative Commons Atribución-CompartirIgual 4.0 Internacional . Basada en una obra en https://iieg.gob.mx/ns/?page_id=23388 . Permisos más allá del alcance de esta licencia pueden estar disponibles en https://facebook.com/labnuevoleon .  
+    """
+    st.markdown(hide_footer_style, unsafe_allow_html=True)
+
