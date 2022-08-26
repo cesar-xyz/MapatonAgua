@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
 import plotly.express as px
-
+import math
 
 def app():
     st.title('Rastreo del agua de Nuevo León')
@@ -12,9 +12,9 @@ def app():
     with my_expander:
         st.markdown("#### Filtrar datos georreferenciados.", unsafe_allow_html=True)
         
-        filtro = st.radio("Coincidencia respecto al pozo de interés y su georreferencia con el manto acuífero al que pertenece.",('Si, quiero ver los pozos y su correspondencia real.', 'No, quiero ver los datos crudos'))
+        filtro = st.radio("Coincidencia respecto al pozo de interés y su georreferencia con el manto acuífero al que pertenece.",('Sí, quiero ver los pozos y su correspondencia real.', 'No, quiero ver los datos crudos.'))
 
-        if filtro != 'No, quiero ver los datos crudos':
+        if filtro != 'No, quiero ver los datos crudos.':
             union = union[union['Filtro'] == 'Coincide']
             
         union = union.sort_values(by='VOLUMEN DE EXTRACCIÓN ANUAL DE APROVECHAMIENTOS SUBTERRÁNEOS EN m3')
@@ -39,16 +39,17 @@ def app():
         
         unionF = union[union['Extraccion_Grupo'] == QRatio][
             "VOLUMEN DE EXTRACCIÓN ANUAL DE APROVECHAMIENTOS SUBTERRÁNEOS EN m3"]
-        st.write("El rango del volumen de extracción anual en m3 es mayor y/o igual a {} m3".format(unionF.min()))
+        unionFmin = 0 if math.isnan(unionF.min()) else unionF.min()
+        st.write("El rango del volumen de extracción anual en m3 es mayor y/o igual a {} m3.".format(unionFmin))
 
-        st.markdown("#### Selecciona el filtro de los datos para clasificarlos ", unsafe_allow_html=True)
+        st.markdown("#### Selecciona el filtro de los datos para clasificarlos.", unsafe_allow_html=True)
         
-        option = st.selectbox('Estos datos fueron agregados por la comunidad puede que exista un posible error.', ('si es publico, privado o ejidal','por el uso del acuifero', 'por el nombre del acuifero'))
+        option = st.selectbox('Estos datos fueron agregados por la comunidad puede que exista un posible error.', ('si es público, privado o ejidal','por el uso del acuífero', 'por el nombre del acuífero'))
         
     mapSelector = {
-        "por el nombre del acuifero": "NOMBRE DE ACUIFERO HOMOLOGADO",
-        'por el uso del acuifero': "USO QUE AMPARA EL TITULO",
-        'si es publico, privado o ejidal':"PubPrivEjid"
+        "por el nombre del acuífero": "NOMBRE DE ACUIFERO HOMOLOGADO",
+        'por el uso del acuífero': "USO QUE AMPARA EL TITULO",
+        'si es público, privado o ejidal':"PubPrivEjid"
     }
     st.header("Mapa de pozos de agua clasificados {}".format(option))
     data = union[union['Extraccion_Grupo'] >= QRatio]
@@ -69,16 +70,9 @@ def app():
         "Claro": "carto-positron",
         "Obscuro": "carto-darkmatter"
     }
-
+    st.sidebar.write("[Documentación](https://sites.google.com/view/acuiferosnl/inicio)")
 
     fig.update_layout(mapbox_style=mapColor[color])
     fig.update_layout(margin={"r": 0, "t": 40, "l": 0, "b": 10})
     st.plotly_chart(fig, use_container_width=True)
-
-    hide_footer_style = """
-    <style>
-    .reportview-container .main footer {visibility: hidden;}  
-    Rastreo del agua de Nuevo León por Colaboradores de Rastreo del agua de Nuevo León se distribuye bajo una Licencia Creative Commons Atribución-CompartirIgual 4.0 Internacional . Basada en una obra en https://iieg.gob.mx/ns/?page_id=23388 . Permisos más allá del alcance de esta licencia pueden estar disponibles en https://facebook.com/labnuevoleon .  
-    """
-    st.markdown(hide_footer_style, unsafe_allow_html=True)
 

@@ -43,6 +43,5 @@ class MultiApp:
             '¿Qué quieres visualizar?',
             self.apps,
             format_func=lambda app: app['title'])
-
         app['function']()
         
