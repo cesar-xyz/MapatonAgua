@@ -5,16 +5,16 @@ import plotly.express as px
 
 def app():
     st.title('Rastreo del agua de Nuevo León')
-    st.markdown("**Rastreo del agua en Nuevo León** es una iniciativa de mapeo a través de datos y cartografía social de los acuíferos del estado a llevarse a cabo en LABNL Lab Cultural Ciudadano. Esta información será trasladada a un mapa abierto consultable por y para la ciudadanía neolonesa. ---")
+    st.markdown("**Rastreo del agua en Nuevo León** es una iniciativa de mapeo a través de datos y cartografía social de los acuíferos del estado la cual es impulsada desde LABNL Lab Cultural Ciudadano. La intención es visibilizar la distribución de los acuíferos que se encuentran dentro de la entidad, las personas (físicas o morales) dueñas de los títulos para la explotación de los mismos, los pozos de los que se extrae el agua y gráficas que nos permitan visibilizarlo de forma más menos compleja.")
     union = pd.read_csv("files/UnionRegiosDOFShape.csv")
     
     my_expander = st.expander(label='Filtros para aplicar en el mapa')
     with my_expander:
-        st.markdown("##### ¿Quieres filtrar los datos respecto a su posición geografica?", unsafe_allow_html=True)
+        st.markdown("#### Filtrar datos georreferenciados.", unsafe_allow_html=True)
         
-        filtro = st.radio("Los datos filtrados si coincidian o no con el acuifero al cual estaban referenciados.",('Si, filtrar', 'No'))
+        filtro = st.radio("Coincidencia respecto al pozo de interés y su georreferencia con el manto acuífero al que pertenece.",('Si, quiero ver los pozos y su correspondencia real.', 'No, quiero ver los datos crudos'))
 
-        if filtro != 'No':
+        if filtro != 'No, quiero ver los datos crudos':
             union = union[union['Filtro'] == 'Coincide']
             
         union = union.sort_values(by='VOLUMEN DE EXTRACCIÓN ANUAL DE APROVECHAMIENTOS SUBTERRÁNEOS EN m3')
@@ -32,14 +32,16 @@ def app():
 
         union['Extraccion_Grupo'] = group
 
-        st.markdown("##### Selecciona el filtro por la extracción anual por $$m^3$$", unsafe_allow_html=True)
-        QRatio = st.slider('El 0 es la cantidad minima y 200 es la cantidad maxima.', 0, 200)
+        st.markdown("#### Filtrar por cantidad de agua extraída  anualmente ($$m^3$$, metros cúbicos).", unsafe_allow_html=True)
+        # st.write("Los datos que observarás a continuación corresponden a los pozos que se encuentran en el estado de Nuevo León. De los cerca de 9000 que se encuentran en la entidad se decidió crear un filtro en 200 segmentos que agrupan los pozos por cantidad de agua extraída.")
+        st.write("Esta barra deslizadora funciona como un termómetro, siéntete libre de moverla de un lado a otro, te darás cuenta de que el mapa modifica los datos que muestra a medida que lo haces.")
+        QRatio = st.slider('0 es la el grupo de pozos que presentan menor extracción y 200 aquellos que presentan mayor cantidad de extracción.', 0, 200)
         
         unionF = union[union['Extraccion_Grupo'] == QRatio][
             "VOLUMEN DE EXTRACCIÓN ANUAL DE APROVECHAMIENTOS SUBTERRÁNEOS EN m3"]
         st.write("El rango del volumen de extracción anual en m3 es mayor y/o igual a {} m3".format(unionF.min()))
 
-        st.markdown("##### Selecciona el filtro de los datos para clasificarlos ", unsafe_allow_html=True)
+        st.markdown("#### Selecciona el filtro de los datos para clasificarlos ", unsafe_allow_html=True)
         
         option = st.selectbox('Estos datos fueron agregados por la comunidad puede que exista un posible error.', ('si es publico, privado o ejidal','por el uso del acuifero', 'por el nombre del acuifero'))
         
@@ -48,7 +50,7 @@ def app():
         'por el uso del acuifero': "USO QUE AMPARA EL TITULO",
         'si es publico, privado o ejidal':"PubPrivEjid"
     }
-    st.subheader("Mapa de pozos de agua clasificados {}".format(option))
+    st.header("Mapa de pozos de agua clasificados {}".format(option))
     data = union[union['Extraccion_Grupo'] >= QRatio]
     fig = px.scatter_mapbox(data,
                             lon=data['Longitud'],
