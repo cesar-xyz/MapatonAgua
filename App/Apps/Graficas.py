@@ -1,7 +1,7 @@
 import pandas as pd
 import plotly.express as px
 
-union = pd.read_csv("../files/UnionRegiosDOFShape.csv")
+union = pd.read_csv("files/UnionRegiosDOFShape.csv")
 
 
 def dinamico(etiqueta, DF=union):
