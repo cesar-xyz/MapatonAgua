@@ -1,5 +1,6 @@
 import pandas as pd
 import plotly.express as px
+import streamlit as st
 
 union = pd.read_csv("files/UnionRegiosDOFShape.csv")
 
@@ -99,4 +100,10 @@ def app():
                     labels={  # replaces default labels by column name
                         "value": "Volumen de agua", "variable": "Tipo de conceción"
                     }, )
-    VolFig.show()
+    st.plotly_chart(fig1, use_container_width=True)
+    st.plotly_chart(fig2, use_container_width=True)
+    st.plotly_chart(fig3, use_container_width=True)
+    st.plotly_chart(fig4, use_container_width=True)
+    st.plotly_chart(fig5, use_container_width=True)
+    st.plotly_chart(ConFig, use_container_width=True)
+    st.plotly_chart(VolFig, use_container_width=True)
