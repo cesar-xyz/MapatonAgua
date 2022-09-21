@@ -33,9 +33,7 @@ def app():
                   values='Column1',
                   names='USO QUE AMPARA EL TITULO',
                   title="Porcentaje de pozos por usos.")
-    fig1.show()
-    fig2.show()
-    fig3.show()
+
     fig4 = px.bar(table4,
                   y="NOMBRE DE MUNICIPIO",
                   x="Column1",
@@ -44,7 +42,6 @@ def app():
                   labels={  # replaces default labels by column name
                       "Column1": "Concesiones"
                   }, )
-    fig4.show()
     fig5 = px.bar(table4,
                   y="NOMBRE DE MUNICIPIO",
                   x="VOLUMEN ANUAL EN m3",
@@ -53,7 +50,6 @@ def app():
                   labels={  # replaces default labels by column name
                       "Column1": "Concesiones"
                   }, )
-    fig5.show()
 
     ano = pd.DatetimeIndex(union['FECHA DE REGISTRO']).year
     union['ano'] = ano
@@ -79,7 +75,6 @@ def app():
                     labels={  # replaces default labels by column name
                         "AÑO": "Año", "value": "Numero de conceciones", "variable": "Tipo de conceción"
                     }, )
-    ConFig.show()
 
     data2 = [union["NOMBRE DE ACUIFERO HOMOLOGADO"], union['Column1'], union["VOLUMEN ANUAL EN m3"], pri, pub, eji]
     data2 = pd.concat(data2, axis=1,
@@ -100,6 +95,10 @@ def app():
                     labels={  # replaces default labels by column name
                         "value": "Volumen de agua", "variable": "Tipo de conceción"
                     }, )
+
+    st.sidebar.write("[Documentación](https://sites.google.com/view/acuiferosnl/inicio)")
+
+
     st.plotly_chart(fig1, use_container_width=True)
     st.plotly_chart(fig2, use_container_width=True)
     st.plotly_chart(fig3, use_container_width=True)
